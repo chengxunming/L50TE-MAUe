@@ -1,0 +1,83 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         #line   1                "..\\USER\\SystemReset.s"
+    1 00000000         ;*
+    2 00000000         ;*
+    3 00000000         ;* 
+    4 00000000         ;*
+    5 00000000         
+    6 00000000         
+    7 00000000         
+    8 00000000         
+    9 00000000         
+   10 00000000         
+   11 00000000         ;*_asm void SystemReset(void)
+   12 00000000         ;*{
+   13 00000000         ;*  MOV R0,#1  
+   14 00000000         ;*  MSR FAULTMASK,R0      
+   15 00000000         ;*  LDR R0,=0xE000ED0C
+   16 00000000         ;* LDR R1,=0x05FA0004
+   17 00000000         ;* STR R1,[R0]           
+   18 00000000         ;* 
+   19 00000000         ;* deadloop
+   20 00000000         ;*   B deadloop          
+   21 00000000         ;*}
+   22 00000000         ;*
+   23 00000000         
+   24 00000000                 AREA             ASMTEST,CODE,READONLY ;
+   25 00000000                 THUMB                        ;
+   26 00000000                 PRESERVE8                    ;
+   27 00000000                 export           SystemReset ;
+   28 00000000         SystemReset
+   29 00000000 F04F 0001       MOV              R0,#1
+   30 00000004 F380 8813       MSR              FAULTMASK,R0 ;
+   31 00000008 4801            LDR              R0,=0xE000ED0C
+   32 0000000A 4902            LDR              R1,=0x05FA0004
+   33 0000000C 6001            STR              R1,[R0]     ;
+   34 0000000E         
+   35 0000000E         deadloop
+   36 0000000E E7FE            B                deadloop    ;
+   37 00000010         
+   38 00000010                 END
+              E000ED0C 
+              05FA0004 
+Command Line: --debug --xref --cpreproc --cpu=Cortex-M3 --apcs=interwork --depe
+nd=..\output\systemreset.d -o..\output\systemreset.o -IF:\Keil\ARM\RV31\INC -IF
+:\Keil\ARM\CMSIS\Include -IF:\Keil\ARM\Inc\ST\STM32F10x --list=..\listing\syste
+mreset.lst ..\USER\SystemReset.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ASMTEST 00000000
+
+Symbol: ASMTEST
+   Definitions
+      At line 24 in file ..\\USER\\SystemReset.s
+   Uses
+      None
+Comment: ASMTEST unused
+SystemReset 00000000
+
+Symbol: SystemReset
+   Definitions
+      At line 28 in file ..\\USER\\SystemReset.s
+   Uses
+      At line 27 in file ..\\USER\\SystemReset.s
+Comment: SystemReset used once
+deadloop 0000000E
+
+Symbol: deadloop
+   Definitions
+      At line 35 in file ..\\USER\\SystemReset.s
+   Uses
+      At line 36 in file ..\\USER\\SystemReset.s
+Comment: deadloop used once
+3 symbols
+335 symbols in table

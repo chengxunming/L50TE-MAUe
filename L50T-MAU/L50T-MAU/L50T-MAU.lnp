@@ -1,0 +1,26 @@
+--cpu Cortex-M3
+".\startup_stm32f10x_md.o"
+".\function.o"
+".\main.o"
+".\stm32f10x_it.o"
+".\systick.o"
+".\candata.o"
+".\timirqhandler.o"
+".\gpioint.o"
+".\rccandnvic.o"
+".\misc.o"
+".\stm32f10x_adc.o"
+".\stm32f10x_can.o"
+".\stm32f10x_dma.o"
+".\stm32f10x_flash.o"
+".\stm32f10x_gpio.o"
+".\stm32f10x_iwdg.o"
+".\stm32f10x_pwr.o"
+".\stm32f10x_rcc.o"
+".\stm32f10x_tim.o"
+".\core_cm3.o"
+".\system_stm32f10x.o"
+--strict --scatter ".\L50T-MAU.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "..\Listing\L50T-MAU.map" -o .\L50T-MAU.axf
