@@ -24,7 +24,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h" 
 
-
+void IRQHandler_CAN1_RX0_Callback(void);
  
 void NMI_Handler(void)
 {
@@ -85,3 +85,8 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
+
+void USB_LP_CAN1_RX0_IRQHandler(void)       //CAN接收中断函数
+{
+	IRQHandler_CAN1_RX0_Callback();
+}

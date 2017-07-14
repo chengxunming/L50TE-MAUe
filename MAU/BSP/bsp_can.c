@@ -3,6 +3,9 @@
 #include "bsp.h"
 
 static Frame_DefType receive_Frame;
+volatile uint8_t Rx_Message[8];
+volatile uint16_t FuncNumber;
+volatile uint8_t MAUFunFlag;
 
 static void CAN_GPIO_Init(void)
 {
@@ -34,8 +37,8 @@ void CAN_Configuration(void)
 	CAN1_CLK_ENABLE();//Ê¹ÄÜCAN1Ê±ÖÓ
 	
 	CAN_InitStructure.CAN_TTCM = DISABLE; /*½ûÖ¹Ê±¼ä´¥·¢Í¨Ñ¶Ä£Ê½*/
-//	CAN_InitStructure.CAN_ABOM = ENABLE; /*×Ô¶¯ÍË³öÀëÏß×´Ì¬·½Ê½£¬0-ÓĞÌõ¼şÊÖ¶¯ÀëÏß£¬1-×Ô¶¯ÍË³öÀëÏß×´Ì¬*/
-	CAN_InitStructure.CAN_ABOM = DISABLE; /*×Ô¶¯ÍË³öÀëÏß×´Ì¬·½Ê½£¬0-ÓĞÌõ¼şÊÖ¶¯ÀëÏß£¬1-×Ô¶¯ÍË³öÀëÏß×´Ì¬*/
+	CAN_InitStructure.CAN_ABOM = ENABLE; /*×Ô¶¯ÍË³öÀëÏß×´Ì¬·½Ê½£¬0-ÓĞÌõ¼şÊÖ¶¯ÀëÏß£¬1-×Ô¶¯ÍË³öÀëÏß×´Ì¬*/
+//	CAN_InitStructure.CAN_ABOM = DISABLE; /*×Ô¶¯ÍË³öÀëÏß×´Ì¬·½Ê½£¬0-ÓĞÌõ¼şÊÖ¶¯ÀëÏß£¬1-×Ô¶¯ÍË³öÀëÏß×´Ì¬*/
 	CAN_InitStructure.CAN_AWUM = DISABLE; /*0-ÓÉÈí¼şÍ¨¹ıÇå0»½ĞÑ£¬1-¼ì²âµ½±¨ÎÄÊ±£¬×Ô¶¯»½ĞÑ*/
 	CAN_InitStructure.CAN_NART = DISABLE; /*0-Ò»Ö±ÖØ¸´·¢ËÍÖ±µ½³É¹¦£¬1-²»ÂÛ³É¹¦ÒÔ·ñÖ»·¢ËÍÒ»´Î*///×Ô¶¯ÖØ´«											
 	CAN_InitStructure.CAN_RFLM = DISABLE; /*0-Òç³öÊ±FIFOÎ´Ëø¶¨£¬ĞÂ±¨ÎÄ¸Çµô¾É±¨ÎÄ£¬1-Ëø¶¨£¬Òç³öºóĞÂ±¨ÎÄÖ±½Ó¶ªÊ§*/
@@ -69,9 +72,9 @@ void CAN_Configuration(void)
 //	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 	
 	/* Enable the CAN Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;	 
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 5;
+	NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	
@@ -94,53 +97,142 @@ void CAN_Filter_Config(void)
 	CAN_FilterInitStructure.CAN_FilterScale=CAN_FilterScale_32bit;	//¹ıÂËÆ÷Î»¿íÎªµ¥¸ö32Î»¡£
 	/* Ê¹ÄÜ±¨ÎÄ±êÊ¾·û¹ıÂËÆ÷°´ÕÕ±êÊ¾·ûµÄÄÚÈİ½øĞĞ±È¶Ô¹ıÂË£¬À©Õ¹ID²»ÊÇÈçÏÂµÄ¾ÍÅ×Æúµô£¬ÊÇµÄ»°£¬»á´æÈëFIFO0¡£ */
 
-    CAN_FilterInitStructure.CAN_FilterIdHigh= ((uint32_t)(MAU_CAN_ID<<21)&0xffff0000)>>16;				//Òª¹ıÂËµÄID¸ßÎ» 
+    CAN_FilterInitStructure.CAN_FilterIdHigh= ((uint32_t)(Heartbeat_ID<<21)&0xffff0000)>>16;				//Òª¹ıÂËµÄID¸ßÎ» 
     CAN_FilterInitStructure.CAN_FilterIdLow= (CAN_ID_STD|CAN_RTR_DATA)&0xffff; //Òª¹ıÂËµÄIDµÍÎ» 
-    CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0xEFFF;//0x7FFF;			//¹ıÂËÆ÷¸ß16Î»Ã¿Î»±ØĞëÆ¥Åä
+    CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0x6FFF;//0x7FFF;			//¹ıÂËÆ÷¸ß16Î»³ıĞÄÌøÖ¡Ö®Íâ±ØĞëÆ¥Åä
     CAN_FilterInitStructure.CAN_FilterMaskIdLow=0xFFFF;//0xFFFF;			//¹ıÂËÆ÷µÍ16Î»Ã¿Î»±ØĞëÆ¥Åä
 	CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0 ;				//¹ıÂËÆ÷±»¹ØÁªµ½FIFO0
 	CAN_FilterInitStructure.CAN_FilterActivation=ENABLE;			//Ê¹ÄÜ¹ıÂËÆ÷
 	CAN_FilterInit(&CAN_FilterInitStructure);
-	/*CANÍ¨ĞÅÖĞ¶ÏÊ¹ÄÜ*/
+	
+	//CAN¹ıÂËÆ÷³õÊ¼»¯
+	CAN_FilterInitStructure.CAN_FilterNumber=1;						//¹ıÂËÆ÷×é0
+	CAN_FilterInitStructure.CAN_FilterMode=CAN_FilterMode_IdMask;	//¹¤×÷ÔÚ±êÊ¶ÁĞ±íÄ£Ê½
+	CAN_FilterInitStructure.CAN_FilterScale=CAN_FilterScale_32bit;	//¹ıÂËÆ÷Î»¿íÎªµ¥¸ö32Î»¡£
+	// Ê¹ÄÜ±¨ÎÄ±êÊ¾·û¹ıÂËÆ÷°´ÕÕ±êÊ¾·ûµÄÄÚÈİ½øĞĞ±È¶Ô¹ıÂË£¬À©Õ¹ID²»ÊÇÈçÏÂµÄ¾ÍÅ×Æúµô£¬ÊÇµÄ»°£¬»á´æÈëFIFO0¡£
+
+	CAN_FilterInitStructure.CAN_FilterIdHigh= ((uint32_t)(MAU_CAN_ID<<21)&0xffff0000)>>16;				//Òª¹ıÂËµÄID¸ßÎ»
+	CAN_FilterInitStructure.CAN_FilterIdLow= (CAN_ID_STD|CAN_RTR_DATA)&0xffff; //Òª¹ıÂËµÄIDµÍÎ»
+	CAN_FilterInitStructure.CAN_FilterMaskIdHigh=0x6FFF;//0x7FFF;			//¹ıÂËÆ÷¸ß16Î»³ıĞÄÌøÖ¡Ö®Íâ±ØĞëÆ¥Åä
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow=0xFFFF;//0xFFFF;			//¹ıÂËÆ÷µÍ16Î»Ã¿Î»±ØĞëÆ¥Åä
+	CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0 ;				//¹ıÂËÆ÷±»¹ØÁªµ½FIFO0
+	CAN_FilterInitStructure.CAN_FilterActivation=ENABLE;			//Ê¹ÄÜ¹ıÂËÆ÷
+	CAN_FilterInit(&CAN_FilterInitStructure);
+	//CANÍ¨ĞÅÖĞ¶ÏÊ¹ÄÜ
 	CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
 
-//·¢ËÍCANÊı¾İÖ¡--PDU·¢ËÍ--µ¥Ö¡
-uint8_t Send_CAN_DataFrame(uint8_t *ptr,uint8_t len) //ptr: Êı¾İÖ¸Õë. len: Êı¾İ³¤¶È 
+/*
+ * º¯ÊıÃû£º	Send_CAN_HeartbeatFrame
+ * ÃèÊö  £º	·¢ËÍCANĞÄÌøèå
+ * ÊäÈë  £º	ÎŞ
+ * Êä³ö  : 	can_tx_fail  CAN·¢ËÍ×´Ì¬ 0£º³É¹¦     1£ºÊ§°Ü
+ */
+uint8_t Send_CAN_HeartbeatFrame(void)
 {
 	uint16_t i=0;
 	uint8_t mailbox_num, can_tx_fail=0;
 	uint32_t SENDID;
 	CanTxMsg TxMessage;
 
-	
-	SENDID = (0x01<<7)|MAU_CAN_ID;
-	
-	TxMessage.StdId = SENDID;	
-	TxMessage.IDE = CAN_ID_STD;//±ê×¼Ö¡     //CAN_ID_EXT;
-	TxMessage.RTR = CAN_RTR_DATA;//Êı¾İÖ¡
-    
-	if((len<=8)&&(len>0))
+	SENDID = (0x01<<10)|(0x01<<7) | MAU_CAN_ID;//½«ID.28ÖÃ1ºÍID.25ÖÃ1,ID28Êı¾İÖ¡ÀàĞÍÉèÖÃ£¬1ÎªĞÄÌøÖ¡£¬0ÎªĞÅÏ¢Ö¡
+
+	TxMessage.StdId = SENDID;
+	TxMessage.IDE = CAN_ID_STD;   //±ê×¼ID
+	TxMessage.RTR = CAN_RTR_DATA;
+
+	TxMessage.DLC = 0;
+
+	mailbox_num = CAN_Transmit(CAN1, &TxMessage);
+
+
+	while ((CAN_TransmitStatus(CAN1, mailbox_num) != CANTXOK)&&(i<2000))   //·¢ËÍ×´Ì¬,µÈµ½·¢ËÍÍê³É
 	{
-		TxMessage.DLC = len;
-		
-		for(i=0; i<len; i++)
+		i++;
+	}
+	if (i==2000)
+	{
+		CAN_CancelTransmit(CAN1, mailbox_num);   //³¬Ê±¹Ø±Õ·¢ËÍ
+		can_tx_fail = 1;
+	}
+	return can_tx_fail;
+}
+
+/*
+ * º¯ÊıÃû£º	Send_CAN_DataFrame_Single
+ * ÃèÊö  £º	·¢ËÍCANÊı¾İÖ¡--µ¥Ö¡
+ * ÊäÈë  £º	ptr: Êı¾İÖ¸Õë
+ * 			len: Êı¾İ³¤¶È
+ * Êä³ö  :	can_tx_fail  CAN·¢ËÍ×´Ì¬ 0£º³É¹¦     1£ºÊ§°Ü
+ */
+uint8_t Send_CAN_DataFrame_Single(uint8_t *ptr, uint8_t len)
+{
+	uint16_t i=0,FuncH,FuncL;
+	uint8_t mailbox_num, can_tx_fail=0;
+	uint32_t SENDID;
+	CanTxMsg TxMessage;
+
+	SENDID = (0x01<<7) | MAU_CAN_ID; //½«ID.25ÉèÖÃÎª1£¬1Îª·¢ËÍµØÖ·£¬0Îª½ÓÊÕµØÖ·
+
+	switch (MAUFunFlag)
+	{
+		case 21:
+			FuncNumber = 21;//MLMC±àºÅ0x15
+			break;
+		case 22:
+			FuncNumber = 22;//MMAC±àºÅ0x16
+			break;
+		case 23:
+			FuncNumber = 23;//MFSC±àºÅ0x17
+			break;
+		case 24:
+			FuncNumber = 24;//MRTC±àºÅ0x18
+			break;
+		case 25:
+			FuncNumber = 25;//MKYC±àºÅ0x19
+			break;
+		case 26:
+			FuncNumber = 26;//MKYC±àºÅ0x1A
+			break;
+		case 27:
+			FuncNumber = 341;//MAUS±àºÅ0x0155
+			break;
+		default:
+			break;
+	}
+
+	FuncH = (FuncNumber&0xFF00)>>8;
+	FuncL = (uint8_t)(FuncNumber&0x00FF);
+
+	TxMessage.StdId = SENDID;
+	TxMessage.IDE = CAN_ID_STD;//CAN_ID_EXT;
+	TxMessage.RTR = CAN_RTR_DATA;
+
+	if ((len<=8)&&(len>0))
+	{
+		TxMessage.DLC = len+3;
+
+		TxMessage.Data[0] = 0x00;   //¿ªÊ¼Ö¡,µ¥Ö¡´«Êä
+		TxMessage.Data[1] = FuncL;
+		TxMessage.Data[2] = FuncH;
+
+		for (i=0; i<len; i++)
 		{
-			TxMessage.Data[i] = *ptr++;
-		}	
+			TxMessage.Data[i+3] = *ptr++;
+		}
 	}
 	else
 	{
 		TxMessage.DLC = 0;
 	}
-	
+
 	mailbox_num = CAN_Transmit(CAN1, &TxMessage);
-	
-	while((CAN_TransmitStatus(CAN1, mailbox_num) != CANTXOK)&&(i<1000)) //·¢ËÍ×´Ì¬,µÈµ½·¢ËÍÍê³É  
+
+	while ((CAN_TransmitStatus(CAN1, mailbox_num) != CANTXOK)&&(i<2000)) //·¢ËÍ×´Ì¬,µÈµ½·¢ËÍÍê³É
 	{
 		i++;
 	}
-	if(i==1000)
+	if (i==2000)
 	{
 		CAN_CancelTransmit(CAN1, mailbox_num);//³¬Ê±¹Ø±Õ·¢ËÍ
 		can_tx_fail = 1;
@@ -148,80 +240,152 @@ uint8_t Send_CAN_DataFrame(uint8_t *ptr,uint8_t len) //ptr: Êı¾İÖ¸Õë. len: Êı¾İ³
 	return can_tx_fail;
 }
 
+
+
+
+
+//½ÓÊÕCANÊı¾İÖ¡£¬×÷¹¦ÄÜÊ¶±ğ
+/*
+ * º¯ÊıÃû£º	Send_CAN_DataFrame_Single
+ * ÃèÊö  £º	·¢ËÍCANÊı¾İÖ¡--µ¥Ö¡
+ * ÊäÈë  £º	canRx: CAN½ÓÊÕÏûÏ¢Êı¾İÖ¸Õë
+ * 			num	 : ½ÓÊÕÊı¾İ³¤¶È
+ * Êä³ö  :	can_tx_fail  CAN·¢ËÍ×´Ì¬ 0£º³É¹¦     1£ºÊ§°Ü
+ */
 //½ÓÊÕCANÊı¾İÖ¡£¬×÷¹¦ÄÜÊ¶±ğ
 void Receive_CAN_DataFrame(CanRxMsg* canRx,uint8_t num)
 {
 	uint8_t i;
-	uint8_t *prt_rx;
-	if(num!=5)
-	{
-		ev_CanRespone=CAN_EV_ResFail;
-		return;
-	}
-	prt_rx=(uint8_t *)(&receive_Frame);
-	for(i=0; i<num; i++)
-	{
-		*(prt_rx+i)= canRx->Data[i];
-	}
-	if(DataCheckSum((uint8_t *)(&receive_Frame),4)!=receive_Frame.check_sum)
-	{
-		ev_CanRespone=CAN_EV_ResFail;
-		return;
-	}
-	switch(receive_Frame.fun_code)
-	{
-		case FUN_CAN:
-			MAU_FunCan_Respone_Deal(&receive_Frame);
-			break;
-		case FUN_RESULT:
-			
-			break;
-		case FUN_END:
-			
-			break;
-		default:
-			ev_CanRespone=CAN_EV_ResFail;
-			break;
-	}
+	uint16_t ID_temp;
+//	for (i=0; i<num; i++)
+//	{
+//		Receive_Buf[i] = canRx->Data[i];
+//	}
+//	ID_temp = Receive_Buf[2]<<8 | Receive_Buf[1];
+//	switch (ID_temp)
+//	{
+//	case 11:
+//		PASC();//½éÈëÃÜÂë¼°Ê¹ÄÜÃüÁî,ÃüÁî0x0B(11)
 
+//		break;
+//	case 321:
+//		WARN();//¾¯¸æ¹ÊÕÏ×´Ì¬,ÃüÁî0x141(321)
+
+//		break;
+//	case 322:
+//		FATA();//ÑÏÖØ¹ÊÕÏ×´Ì¬,ÃüÁî0x142(322)
+
+//		break;
+//	case 323:
+//		LMPS();//ÍâµÆÍ¨µÀÊä³ö¿ª¹Ø×´Ì¬,ÃüÁî0x143(323)
+
+//		break;
+//	case 324:
+//		CSOR();//¿ØÖÆÔ´×´Ì¬,ÃüÁî0x144(324)
+
+//		break;
+//	case 325:
+//		FLSS();//ÉÁµÆ×´Ì¬,ÃüÁî0x145(325)
+
+//		break;
+
+//	case 326:
+//		REMT();//ĞÅºÅ»úÒ£¿Ø×´Ì¬,ÃüÁî0x146(326)
+
+//		break;
+//	case 327:
+//		KNMS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x147(327)
+
+//		break;
+//	case 328:
+//		KSPS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x148(328)
+
+//		break;
+//	case 329:
+//		KARS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x149(329)
+
+//		break;
+//	case 330:
+//		KLAS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x14A(330)
+
+//		break;
+//	case 331:
+//		KLBS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x14B(331)
+
+//		break;
+//	case 332:
+//		KLCS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x14C(332)
+
+//		break;
+//	case 333:
+//		KLDS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x14D(333)
+
+//		break;
+//	case 334:
+//		KLES();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x14E(334)
+
+//		break;
+//	case 335:
+//		KLSS();//ÊÖ¶¯²½½øµã×´Ì¬,ÃüÁî0x14F(335)
+
+//		break;
+
+////×ÔĞĞÔö¼Ó²âÊÔ±¸ÓÃÃüÁî
+//	case 336:
+//		Test();//¼üÅÌÖ¸Ê¾µÆÈ«ÁÁ,ÃüÁî0x150(336)
+//		break;
+//	default:
+//		memset(Receive_Buf,0x00,10);
+//		break;
+//	}
 }
 
-/******************************************************************************/
-/*                 STM32F10x Peripherals Interrupt Handlers                   */
-/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
-/*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f10x_xx.s).                                            */
-/******************************************************************************/
-
-void USB_LP_CAN1_RX0_IRQHandler(void)       //CAN½ÓÊÕÖĞ¶Ïº¯Êı
+/*
+ * º¯ÊıÃû£º	IRQHandler_CAN1_RX0_Callback
+ * ÃèÊö  £º	CAN½ÓÊÕÖĞ¶Ï»Øµ÷º¯Êı
+ * ÊäÈë  £º	ÎŞ
+ * Êä³ö  :	ÎŞ
+ */
+void IRQHandler_CAN1_RX0_Callback(void)
 {
 	uint8_t i;
 	CanRxMsg RxMessage;
- 	
 
+	//³õÊ¼»¯½ÓÊÕ
 	RxMessage.StdId = 0x00;  //±ê×¼±êÊ¶·û£¨È¡Öµ 0~0x7FF£©
 	RxMessage.ExtId = 0x00;  //À©Õ¹±êÊ¶·û£¨È¡Öµ 0~0x3FFFF£©
 	RxMessage.IDE = 0x00;    //±êÊ¶·ûµÄÀàĞÍ
 	RxMessage.DLC = 0x00;    //ÏûÏ¢µÄÖ¡³¤¶È£¨È¡Öµ 0~0x8£©
 	RxMessage.FMI = 0x00;    //ÒªÍ¨¹ıµÄ¹ıÂËÆ÷Ë÷Òı£¬ÕâĞ©ÏûÏ¢´æ´¢ÓÚÓÊÏäÖĞ£¨È¡ÖµÎª0~0xFF£©
-	for(i=0; i<8; i++)
+	for (i=0; i<8; i++)
 	{
 		RxMessage.Data[i] = 0x00;//´ı´«ÊäÊı¾İ£¨È¡ÖµÎª0~0xFF£©
+		Rx_Message[i] = 0;
 	}
-	
+	//½ÓÊÕ×ÜÏßÉÏµÄÊı¾İÊÍ·ÅFIFO
 	CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);//½ÓÊÕ
-	
-	if(RxMessage.IDE==CAN_ID_STD)
+	//´¦Àí½ÓÊÕµÄÊı¾İ
+	for (i=0; i<RxMessage.DLC; i++)
 	{
-		if(RxMessage.DLC>0)
-		{
-			Receive_CAN_DataFrame(&RxMessage,RxMessage.DLC);//½ÓÊÕCANÊı¾İ,Ö´ĞĞÏàÓ¦²Ù×÷	
-		}
-		if(RxMessage.DLC==0)
-		{
+		Rx_Message[i] = RxMessage.Data[i];
+	}
 
+	if (RxMessage.IDE==CAN_ID_STD)
+	{
+		if (RxMessage.DLC>0)
+		{
+			Receive_CAN_DataFrame(&RxMessage,RxMessage.DLC);//½ÓÊÕCANÊı¾İ
 		}
-		
+		if (RxMessage.DLC==0)
+		{			
+//			if(CPUOFFLINEFLAG)
+//			{
+//				MAVS();
+//			}
+//			CPUOFFLINEFLAG = 0;
+//			RUNledstatus = !RUNledstatus;
+//			GetHeartCnt = 12;
+		}
+
 	}
 }
-

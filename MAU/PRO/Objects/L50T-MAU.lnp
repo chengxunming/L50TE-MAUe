@@ -9,6 +9,7 @@
 ".\objects\bsp_time.o"
 ".\objects\bsp_io.o"
 ".\objects\bsp_flash.o"
+".\objects\bsp_key.o"
 ".\objects\misc.o"
 ".\objects\stm32f10x_can.o"
 ".\objects\stm32f10x_exti.o"

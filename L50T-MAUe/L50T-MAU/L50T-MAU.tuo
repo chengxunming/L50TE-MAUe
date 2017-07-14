@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="Windows-1252" ?>
+<TKStudioOptions Version="3.00" Author="YinHandong[Òüº®¶¬]">
+    <Projects OPTPES="96,96,0,96,0,0,0,2,0,0,0,0,96,0,0,0,0,0,0,0,0,0,0,96,0,0,">
+        <Project ProjectGUID="{5A7B54EF-56C6-4e47-871F-88EDC403E3FD}" Name="L50T-MAU" ACTCFG="L50T-MAU">
+            <TARGOPT Name="L50T-MAU" OPTDF="0">
+                <OPTFFF VAL="&lt;..\user\timirqhandler.c&gt; {0,1,-1,-1,0,0,1457,498,279,6189}" />
+                <OPTFFF VAL="&lt;..\user\global.h&gt; {0,1,-1,-1,25,25,1482,500,172,6183}" />
+                <OPTFFF VAL="&lt;..\user\main.c&gt; {0,1,-1,-1,0,0,1457,498,96,4311}" />
+                <OPTFFF VAL="&lt;..\user\gpioint.c&gt; {0,1,-1,-1,0,0,1457,498,180,473}" />
+                <OPTFFF VAL="&lt;..\user\function.c&gt; {0,1,-1,-1,0,0,1457,498,92,2675}" />
+                <OPTFFF VAL="&lt;..\user\candata.c&gt; {2,3,-1,-1,0,0,1457,498,0,170}" />
+            </TARGOPT>
+        </Project>
+    </Projects>
+</TKStudioOptions>

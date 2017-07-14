@@ -99,6 +99,8 @@ int main(void)
 	RCC_Configuration();  //外部时钟配置
 
 	GPIOInit();           //GPIO口初始化
+	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_0);	//置0，关闭蜂鸣器输出
 
 
 	NVIC_Configuration(); //中断配置

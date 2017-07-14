@@ -17,19 +17,19 @@ int main(void)
 	NVIC_Configuration(); 	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
 	delay_init(72);	    	 //延时函数初始化
 	
-	Switch_GPIO_Init();
+//	Switch_GPIO_Init();
 	BUZZER_Init();
 	LED_Init();
 	CAN_Configuration();
-	Time_Init();
+//	Time_Init();
 	
 	delay_ms(1000);			//上电延迟1s，待单片机稳定
 	
-	MAU_CanTest();
-	MAU_SwitchTest();
-	MAU_BuzzerTest();
+//	MAU_CanTest();
+//	MAU_SwitchTest();
+//	MAU_BuzzerTest();
 	LED_ALL_ON();
-	MAU_TestEnd();
+//	MAU_TestEnd();
 	while(1)
 	{
 

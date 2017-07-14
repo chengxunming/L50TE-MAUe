@@ -51,7 +51,9 @@ typedef struct
 }Frame_DefType;
 
 /* Private define ------------------------------------------------------------*/
-#define MAU_CAN_ID  0x07
+#define Heartbeat_ID	0x00
+#define MAU_CAN_ID  	0x07
+
 #define CPU_F		72000000
 
 
