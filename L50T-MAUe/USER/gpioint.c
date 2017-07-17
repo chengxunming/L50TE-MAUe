@@ -42,33 +42,20 @@ void GPIOInit(void)
 	/***************************************************************************
 	                      KeyBoard 矩阵键盘初始化
 	****************************************************************************/
-	//COL列线设为推挽输出置0
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_9;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-	GPIO_Init(GPIOC,&GPIO_InitStructure);
-
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-	GPIO_Init(GPIOA,&GPIO_InitStructure);
-
-	GPIO_ResetBits(GPIOC,GPIO_Pin_9); //置0,默认输出低电平
-	GPIO_ResetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10);
-	//ROW行线设为上拉输入
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;
+	//设为上拉输入
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
 	GPIO_Init(GPIOB,&GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
 	GPIO_Init(GPIOC,&GPIO_InitStructure);
 
-	GPIO_SetBits(GPIOB,GPIO_Pin_15);	//置1,默认上拉输入
-	GPIO_SetBits(GPIOC,GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8);
-
+	GPIO_SetBits(GPIOB,GPIO_Pin_1|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15);	//置1,默认上拉输入
+	GPIO_SetBits(GPIOC,GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9);
+	
 	/***************************************************************************
 	                      KeyBoard 背光LED初始化
 	****************************************************************************/
@@ -78,30 +65,40 @@ void GPIOInit(void)
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOA,&GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_10|GPIO_Pin_11;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-	GPIO_Init(GPIOB,&GPIO_InitStructure);
-
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOC,&GPIO_InitStructure);
 
 	GPIO_SetBits(GPIOA,GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7);	//置1关闭LED
-	GPIO_SetBits(GPIOB,GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_10|GPIO_Pin_11);
-	GPIO_SetBits(GPIOC,GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_10);
+	GPIO_SetBits(GPIOC,GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3);
 
+	/***************************************************************************
+	                      开关指示灯LED初始化
+	****************************************************************************/
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+	GPIO_Init(GPIOA,&GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_14|GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+	GPIO_Init(GPIOC,&GPIO_InitStructure);
+
+	GPIO_SetBits(GPIOA,GPIO_Pin_8);	//置1关闭LED
+	GPIO_SetBits(GPIOC,GPIO_Pin_14|GPIO_Pin_15);
+	
 	/***************************************************************************
 	                      状态指示灯LED初始化
 	****************************************************************************/
 	//设置状态指示灯LED推挽输出，默认置1
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOB,&GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOC,&GPIO_InitStructure);
@@ -111,26 +108,26 @@ void GPIOInit(void)
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOD,&GPIO_InitStructure);
 
-	GPIO_SetBits(GPIOB,GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9);	//置1关闭LED
-	GPIO_SetBits(GPIOC,GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15);
+	GPIO_SetBits(GPIOB,GPIO_Pin_6);	//置1关闭LED
+	GPIO_SetBits(GPIOC,GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12);
 	GPIO_SetBits(GPIOD,GPIO_Pin_2);
 
 	/***************************************************************************
 	                      拨动开关状态检测初始化
 	****************************************************************************/
 	//拨动开关状态检测，上拉输入默认置1
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
 	GPIO_Init(GPIOB,&GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4|GPIO_Pin_5;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
 	GPIO_Init(GPIOC,&GPIO_InitStructure);
 
-	GPIO_SetBits(GPIOB,GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14); //置1，默认上拉输入
-	GPIO_SetBits(GPIOC,GPIO_Pin_1); //置1，默认上拉输入
+	GPIO_SetBits(GPIOB,GPIO_Pin_0); //置1，默认上拉输入
+	GPIO_SetBits(GPIOC,GPIO_Pin_4|GPIO_Pin_5); //置1，默认上拉输入
 
 	/***************************************************************************
 	                      蜂鸣器Beep输出控制初始化

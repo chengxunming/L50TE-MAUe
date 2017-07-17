@@ -444,6 +444,11 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\bsp_key.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_fifo.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
