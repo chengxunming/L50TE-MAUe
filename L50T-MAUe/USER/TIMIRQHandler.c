@@ -219,7 +219,7 @@ void TIM2_IRQHandler(void)
 
 		if(CPUOFFLINEFLAG)
 		{
-			passwordFlag=1;
+//			passwordFlag=1;
 			off_passwordFlag=0;
 			LEDALL(OFF);
 			memset(&LEDStatus,0x00,sizeof(LEDStatus));
@@ -384,7 +384,7 @@ void TIM4_IRQHandler(void){
 				if (!passwordFlag)
 				{
 					passwordFlag=1;
-					passwordFlag=0;   //20170608 测试用
+//					passwordFlag=0;   //20170608 测试用
 					TIMENumber=1;//计数清零
 					password=passwordvalue;
 					KEYLOCKOFF;

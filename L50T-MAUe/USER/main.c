@@ -111,7 +111,7 @@ AUTOON;
 	
 	TIM_Configuration();  //定时器初始化
 
-	IWDG_INIT();          //独立看门狗设置
+//	IWDG_INIT();          //独立看门狗设置
 
 	while (1)
 	{
@@ -120,7 +120,7 @@ AUTOON;
 		{
 			Send_CAN_HeartbeatFrame();//CAN心跳帧发送
 			SendHeartbeatFlag=0;
-			IWDG_ReloadCounter();
+//			IWDG_ReloadCounter();
 		}
 		if (passwordchangeFlag)//密码修改标志
 		{
