@@ -10,5 +10,6 @@ void TIM3_IRQHandler(void);
 void TIM4_IRQHandler(void);
 
 /////
+void time10ms_callback(void);
 
 #endif

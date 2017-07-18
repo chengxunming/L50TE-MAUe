@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="Windows-1252" ?>
+<TKStudioOptions Version="3.00" Author="YinHandong[Òüº®¶¬]">
+    <Projects OPTPES="96,0,0,96,0,2,0,0,0,0,96,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,96,0,0,">
+        <Project ProjectGUID="{AE236F5D-89AA-47f6-8326-50E632BC86B4}" Name="L50T-PDU" ACTCFG="L50T-PDU">
+            <TARGOPT Name="L50T-PDU" OPTDF="0">
+                <OPTFFF VAL="&lt;.\user\main.c&gt; {0,1,-1,-1,0,0,1420,488,173,6825}" />
+                <OPTFFF VAL="&lt;.\user\global.h&gt; {0,1,-1,-1,52,52,1498,543,69,3182}" />
+                <OPTFFF VAL="&lt;.\user\function.c&gt; {2,3,-1,-1,26,26,1472,517,1562,37385}" />
+            </TARGOPT>
+        </Project>
+    </Projects>
+</TKStudioOptions>

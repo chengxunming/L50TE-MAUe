@@ -483,10 +483,10 @@ ARM Macro Assembler    Page 8
               00000000 
 Command Line: --debug --xref --cpreproc --diag_suppress=9931 --cpu=Cortex-M3 --
 apcs=interwork --depend=.\startup_stm32f10x_md.d -o.\startup_stm32f10x_md.o -I.
-\RTE\_L50T-MAU -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -IC:\Keil_v5
-\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0\Device\Include --predefine="__UVISION_VERSIO
-N SETA 523" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --list
-=..\listing\startup_stm32f10x_md.lst startup_stm32f10x_md.s
+\RTE\_L50T-MAU -Id:\Keil_v523\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -Id:\Keil_
+v523\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include --predefine="__UVISION_VE
+RSION SETA 523" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --
+list=..\listing\startup_stm32f10x_md.lst startup_stm32f10x_md.s
 
 
 

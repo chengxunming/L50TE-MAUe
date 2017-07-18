@@ -141,17 +141,17 @@ uint8_t Send_CAN_DataFrame_Single(uint8_t *ptr, uint8_t len) //ptr: 数据指针. le
 		TxMessage.DLC = 0;
 	}
 
-	mailbox_num = CAN_Transmit(CAN1, &TxMessage);
+//	mailbox_num = CAN_Transmit(CAN1, &TxMessage);
 
-	while ((CAN_TransmitStatus(CAN1, mailbox_num) != CANTXOK)&&(i<2000)) //发送状态,等到发送完成
-	{
-		i++;
-	}
-	if (i==2000)
-	{
-		CAN_CancelTransmit(CAN1, mailbox_num);//超时关闭发送
-		can_tx_fail = 1;
-	}
+//	while ((CAN_TransmitStatus(CAN1, mailbox_num) != CANTXOK)&&(i<2000)) //发送状态,等到发送完成
+//	{
+//		i++;
+//	}
+//	if (i==2000)
+//	{
+//		CAN_CancelTransmit(CAN1, mailbox_num);//超时关闭发送
+//		can_tx_fail = 1;
+//	}
 	return can_tx_fail;
 }
 
@@ -342,15 +342,15 @@ void Receive_CAN_DataFrame(CanRxMsg* canRx,uint8_t num)
 		CSOR();//控制源状态,命令0x144(324)
 
 		break;
-	case 325:
-		FLSS();//闪灯状态,命令0x145(325)
+//	case 325:
+//		FLSS();//闪灯状态,命令0x145(325)
 
-		break;
+//		break;
 
-	case 326:
-		REMT();//信号机遥控状态,命令0x146(326)
+//	case 326:
+//		REMT();//信号机遥控状态,命令0x146(326)
 
-		break;
+//		break;
 	case 327:
 		KNMS();//手动步进点状态,命令0x147(327)
 
@@ -363,35 +363,35 @@ void Receive_CAN_DataFrame(CanRxMsg* canRx,uint8_t num)
 		KARS();//手动步进点状态,命令0x149(329)
 
 		break;
-	case 330:
-		KLAS();//手动步进点状态,命令0x14A(330)
+//	case 330:
+//		KLAS();//手动步进点状态,命令0x14A(330)
 
-		break;
-	case 331:
-		KLBS();//手动步进点状态,命令0x14B(331)
+//		break;
+//	case 331:
+//		KLBS();//手动步进点状态,命令0x14B(331)
 
-		break;
-	case 332:
-		KLCS();//手动步进点状态,命令0x14C(332)
+//		break;
+//	case 332:
+//		KLCS();//手动步进点状态,命令0x14C(332)
 
-		break;
-	case 333:
-		KLDS();//手动步进点状态,命令0x14D(333)
+//		break;
+//	case 333:
+//		KLDS();//手动步进点状态,命令0x14D(333)
 
-		break;
-	case 334:
-		KLES();//手动步进点状态,命令0x14E(334)
+//		break;
+//	case 334:
+//		KLES();//手动步进点状态,命令0x14E(334)
 
-		break;
-	case 335:
-		KLSS();//手动步进点状态,命令0x14F(335)
+//		break;
+//	case 335:
+//		KLSS();//手动步进点状态,命令0x14F(335)
 
-		break;
+//		break;
 
 //自行增加测试备用命令
-	case 336:
-		Test();//键盘指示灯全亮,命令0x150(336)
-		break;
+//	case 336:
+//		Test();//键盘指示灯全亮,命令0x150(336)
+//		break;
 	default:
 		memset(Receive_Buf,0x00,10);
 		break;

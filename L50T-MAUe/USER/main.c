@@ -92,15 +92,14 @@ static void CAN_Filter_Config(void)
 
 int main(void)
 {
-
+	
 
 	SystemInit();         //系统时钟初始化
 
 	RCC_Configuration();  //外部时钟配置
 
 	GPIOInit();           //GPIO口初始化
-
-
+AUTOON;
 	NVIC_Configuration(); //中断配置
 
 	CAN_Configuration();  //CAN1接口初始化
@@ -108,7 +107,7 @@ int main(void)
 	CAN_Filter_Config();  //CAN1过滤器配置
 	
 	myDelay(100);
-	
+	myDelay(1000);
 	
 	TIM_Configuration();  //定时器初始化
 

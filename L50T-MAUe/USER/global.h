@@ -34,42 +34,26 @@
 /* Private macro -------------------------------------------------------------*/
 
 //LED指示灯控制
-
 #define RUNLEDON		   GPIO_ResetBits(GPIOD,GPIO_Pin_2)//运行指示灯打开
 #define RUNLEDOFF		   GPIO_SetBits(GPIOD,GPIO_Pin_2)
 
 #define ERRLEDON		   GPIO_ResetBits(GPIOC,GPIO_Pin_12)//故障指示灯打开
 #define ERRLEDOFF		   GPIO_SetBits(GPIOC,GPIO_Pin_12)
 
-//#define TUNONLEDON		 GPIO_ResetBits(GPIOC,GPIO_Pin_11)//开灯指示灯打开
-//#define TUNONLEDOFF		 GPIO_SetBits(GPIOC,GPIO_Pin_11)
-
 #define KEYLOCKON		   GPIO_ResetBits(GPIOC,GPIO_Pin_11)//健锁指示灯打开
-#define KEYLOCKOFF		 GPIO_SetBits(GPIOC,GPIO_Pin_11)
+#define KEYLOCKOFF		   GPIO_SetBits(GPIOC,GPIO_Pin_11)
 
-//#define TESTON		   GPIO_ResetBits(GPIOB,GPIO_Pin_5)//测试指示灯打开
-//#define TESTOFF		   GPIO_SetBits(GPIOB,GPIO_Pin_5)
+#define CENTREON		   GPIO_ResetBits(GPIOC,GPIO_Pin_10)//中心指示灯打开
+#define CENTREOFF		   GPIO_SetBits(GPIOC,GPIO_Pin_10)
 
-#define CENTREON		       GPIO_ResetBits(GPIOC,GPIO_Pin_10)//中心指示灯打开
-#define CENTREOFF		     GPIO_SetBits(GPIOC,GPIO_Pin_10)
+#define AUTOON		 GPIO_ResetBits(GPIOB,GPIO_Pin_6)//自动指示灯打开
+#define AUTOOFF	 	 GPIO_SetBits(GPIOB,GPIO_Pin_6)
 
-#define MANON		   GPIO_ResetBits(GPIOC,GPIO_Pin_14)//手控指示灯打开
-#define MANOFF		   GPIO_SetBits(GPIOC,GPIO_Pin_14)
+#define TUNONLEDON		 GPIO_ResetBits(GPIOA,GPIO_Pin_8)//开灯指示灯打开
+#define TUNONLEDOFF		 GPIO_SetBits(GPIOA,GPIO_Pin_8)
 
-//#define TIMEBASEON		 GPIO_ResetBits(GPIOB,GPIO_Pin_8)//时基指示灯打开
-//#define TIMEBASEOFF		 GPIO_SetBits(GPIOB,GPIO_Pin_8)
-
-#define AUTOFLSSON		 GPIO_ResetBits(GPIOB,GPIO_Pin_6)//自动闪指示灯打开
-#define AUTOFLSSOFF	 GPIO_SetBits(GPIOB,GPIO_Pin_6)
-
-//#define MANFLSSON		 GPIO_ResetBits(GPIOC,GPIO_Pin_13)//手控闪指示灯打开
-//#define MANFLSSOFF		 GPIO_SetBits(GPIOC,GPIO_Pin_13)
-
-//#define ERRFLSSON		 GPIO_ResetBits(GPIOC,GPIO_Pin_14)//故障闪指示灯打开
-//#define ERRFLSSOFF		 GPIO_SetBits(GPIOC,GPIO_Pin_14)
-
-//#define ANTCPFLSSON	 GPIO_ResetBits(GPIOC,GPIO_Pin_15)//抢先闪指示灯打开
-//#define ANTCPFLSSOFF	 GPIO_SetBits(GPIOC,GPIO_Pin_15)
+#define MANON		   	 GPIO_ResetBits(GPIOC,GPIO_Pin_14)//手控指示灯打开
+#define MANOFF		     GPIO_SetBits(GPIOC,GPIO_Pin_14)
 
 #define LEDSTEPON		  GPIO_ResetBits(GPIOC,GPIO_Pin_15)//步进键
 #define LEDSTEPOFF		  GPIO_SetBits(GPIOC,GPIO_Pin_15)  //将引脚置1，关闭指示灯
@@ -77,13 +61,13 @@
 //通道指示灯控制
 //为配合背板设定，调整引脚定义对应输出口
 #define LEDALLREDON		  GPIO_ResetBits(GPIOA,GPIO_Pin_1)//全红,Step4
-#define LEDALLREDOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_1)
+#define LEDALLREDOFF	  GPIO_SetBits(GPIOA,GPIO_Pin_1)
 
 #define LEDYFLASHON		  GPIO_ResetBits(GPIOA,GPIO_Pin_4)//黄闪
-#define LEDYFLASHOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_4)
+#define LEDYFLASHOFF	  GPIO_SetBits(GPIOA,GPIO_Pin_4)
 
 #define LEDFNON		  	  GPIO_ResetBits(GPIOA,GPIO_Pin_7)//FN
-#define LEDFNOFF		      GPIO_SetBits(GPIOA,GPIO_Pin_7)
+#define LEDFNOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_7)
 
 #define LEDONEON		  GPIO_ResetBits(GPIOA,GPIO_Pin_6)//步进点1,Step1
 #define LEDONEOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_6)
@@ -94,50 +78,39 @@
 #define LEDTHREEON		  GPIO_ResetBits(GPIOA,GPIO_Pin_0)//步进点3,Step3
 #define LEDTHREEOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_0)
 
-#define LEDFOURON		  GPIO_ResetBits(GPIOC,GPIO_Pin_2)//步进点4,Step5
+#define LEDFOURON		  GPIO_ResetBits(GPIOC,GPIO_Pin_2)//步进点4,Step4
 #define LEDFOUROFF		  GPIO_SetBits(GPIOC,GPIO_Pin_2)
 
-#define LEDFIVEON		  GPIO_ResetBits(GPIOA,GPIO_Pin_5)//步进点5,Step6
+#define LEDFIVEON		  GPIO_ResetBits(GPIOA,GPIO_Pin_5)//步进点5,Step5
 #define LEDFIVEOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_5)
 
-#define LEDSIXON		  GPIO_ResetBits(GPIOA,GPIO_Pin_2)//步进点6,Step7
+#define LEDSIXON		  GPIO_ResetBits(GPIOA,GPIO_Pin_2)//步进点6,Step6
 #define LEDSIXOFF		  GPIO_SetBits(GPIOA,GPIO_Pin_2)
 
-#define LEDSEVENON		  GPIO_ResetBits(GPIOC,GPIO_Pin_3)//步进点7,Step9
+#define LEDSEVENON		  GPIO_ResetBits(GPIOC,GPIO_Pin_3)//步进点7,Step7
 #define LEDSEVENOFF		  GPIO_SetBits(GPIOC,GPIO_Pin_3)
 
-#define LEDEIGHTON		  GPIO_ResetBits(GPIOC,GPIO_Pin_1)//步进点8,Step10
-#define LEDEIGHTOFF		GPIO_SetBits(GPIOC,GPIO_Pin_1)
-
-
-
-
-
-//#define LEDKEYAON		  GPIO_ResetBits(GPIOB,GPIO_Pin_1)// A 键,Step8
-//#define LEDKEYAOFF		  GPIO_SetBits(GPIOB,GPIO_Pin_1)
-
-//#define LEDTESTON		  GPIO_ResetBits(GPIOC,GPIO_Pin_3)//灯测试,Step11
-//#define LEDTESTOFF		GPIO_SetBits(GPIOC,GPIO_Pin_3)
-
-//#define LEDKEYBON		  GPIO_ResetBits(GPIOB,GPIO_Pin_0)//B 键,Step12
-//#define LEDKEYBOFF		GPIO_SetBits(GPIOB,GPIO_Pin_0)
-
-//#define LEDKEYCON		  GPIO_ResetBits(GPIOA,GPIO_Pin_6)//C 键,Step13
-//#define LEDKEYCOFF		GPIO_SetBits(GPIOA,GPIO_Pin_6)
-
-//#define LEDKEYDON		  GPIO_ResetBits(GPIOA,GPIO_Pin_2)//D 键,Step14
-//#define LEDKEYDOFF		GPIO_SetBits(GPIOA,GPIO_Pin_2)
-
-//#define LEDKEYEON		  GPIO_ResetBits(GPIOC,GPIO_Pin_2)//E 键,Step15
-//#define LEDKEYEOFF		GPIO_SetBits(GPIOC,GPIO_Pin_2)
-
+#define LEDEIGHTON		  GPIO_ResetBits(GPIOC,GPIO_Pin_1)//步进点8,Step8
+#define LEDEIGHTOFF		  GPIO_SetBits(GPIOC,GPIO_Pin_1)
 
 
 //拨动开关状态读取（中，上）
-#define SIGNAL1	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//外灯开关
-#define SIGNAL2	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//手控开关，0为关闭
-#define SIGNAL3	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//闪灯开关，1为打开
-#define SIGNAL4	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_1)//遥控开关，默认为高，
+#define SIGNAL1	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_4)//外灯开关
+#define SIGNAL2	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_5)//手控开关，0为关闭
+#define SIGNAL3	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//步进开关，1为打开
+
+
+#define KEY_NUMFN		GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_1)
+#define KEY_NUMYF		GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)
+#define KEY_NUMAR		GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)
+#define KEY_NUM1	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)
+#define KEY_NUM2	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)
+#define KEY_NUM3	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)
+#define KEY_NUM4	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)
+#define KEY_NUM5	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_6)
+#define KEY_NUM6	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_7)
+#define KEY_NUM7	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_8)
+#define KEY_NUM8	GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_9)
 
 
 
@@ -157,17 +130,14 @@ typedef struct
 typedef struct  
 {
 	uint8_t Fault;
-	_Bool Open;
 	_Bool Lock;
-	_Bool Test;
 	_Bool Center;
+	_Bool Auto;
+	
+	_Bool Open;
 	_Bool Manual;
-	_Bool Timebase;
-	_Bool A_Flash;
-	_Bool M_Flash;
-	_Bool F_Flash;
-	_Bool H_Flash;
 	_Bool Step;
+	
 	_Bool One;
 	_Bool Two;
 	_Bool Three;
@@ -176,15 +146,11 @@ typedef struct
 	_Bool Six;
 	_Bool Seven;
 	_Bool Eight;
-	_Bool Nine;
+//	_Bool Nine;
 	_Bool Allred;
-	_Bool Ledtest;
-	_Bool Key_A;
-	_Bool Key_B;
-	_Bool Key_C;
-	_Bool Key_D;
-	_Bool Key_E;
-	
+	_Bool Y_Flash;
+	_Bool Fn;
+//	_Bool Ledtest;	
 } LED;
 /*
 typedef enum
@@ -198,7 +164,9 @@ typedef enum
 
 //外部变量定义
 extern volatile uint8_t TestFlag,SendHeartbeatFlag,GetHeartbaet,MAUFunFlag,ringflag,ErrFlag,FATAFlag,WarningErrFlag,SeriousErrFlag;
-extern uint8_t passwordFlag,off_passwordFlag,password,passwordchangeFlag,KEYx,Keylednum,Keyled_state,Keyfree_state;//SignalSetFlag,StatechangFlag,
+extern uint8_t passwordFlag,off_passwordFlag,password,passwordchangeFlag,Keylednum,Keyled_state,Keyfree_state;//SignalSetFlag,StatechangFlag,KEYx
+extern uint16_t KEYx;
+
 
 extern uint8_t SwitchMode[4],Address[1],TxBuff[10],Receive_Buf[10];
 extern KEYLEDSTATUS KEYLED[16];

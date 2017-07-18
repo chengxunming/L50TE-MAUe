@@ -31,7 +31,7 @@ void GetSwitchMode(void);
 void MLMC(void);
 void MMAC(void);
 void MFSC(void);
-void MRTC(void);
+//void MRTC(void);
 uint8_t Read_KeyValue(void);
 void MKYC(uint8_t Key);
 void REMT(void);

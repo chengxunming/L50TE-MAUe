@@ -14,18 +14,18 @@ uint8_t TxBuff[10];
 volatile uint8_t TestFlag,SendHeartbeatFlag=1,ringflag=0;
 volatile uint8_t GetHeartbaet,WarningErrFlag,SeriousErrFlag,ChannelSetFlag;//
 volatile uint8_t MAUFunFlag;
-uint8_t passwordFlag,password,passwordchangeFlag,off_passwordFlag,KEYx=0,Keylednum,Key_LED[16];;
+uint8_t passwordFlag,password,passwordchangeFlag,off_passwordFlag,Keylednum,Key_LED[16];//KEYx=0,
 //uint8_t * Address = (uint8_t * ) FLASHPASSWORD ;
 
 uint8_t passwordAddress[1],flashvalue,Keyled_state;
 //uint8_t SignalSetFlag=0,StatechangFlag=0;
-uint8_t keylin[8];
+//uint8_t keylin[8];
 
 KEYLEDSTATUS KEYLED[16];
 
 LED LEDStatus;
 
-extern _Bool Led_Status[16];
+extern _Bool Led_Status[11];
 
 /************************************************
              CPU获取信息解析
@@ -58,7 +58,7 @@ void PASC(void)
 			LEDStatus.Lock = 0;
 			password=(Signal & 0X0F);
 			passwordchangeFlag=1;//密码改变,标志置1
-			MAUS();
+//			MAUS();
 		}
 	}
 	else if ((password & 0X10) == 0x10)
@@ -68,7 +68,7 @@ void PASC(void)
 			passwordFlag=1;
 			KEYLOCKON;
 			LEDStatus.Lock = 1;
-			MAUS();
+//			MAUS();
 			password = (i | 0X10);//使能介入密码标志存入Flash
 			passwordchangeFlag=1;//密码改变,标志置1
 //			flashstor(password);//密码存入Flash
@@ -145,304 +145,59 @@ void LMPS(void){
 void CSOR(void){
 	uint8_t Signal = 0x00;
 	Signal = Receive_Buf[3];
-	switch (Signal)
+	if(Signal==0xaa)//自动状态
 	{
-	case 0x01:
-		//其它，测试
-		ringflag=0;
-		TESTON;
-		
-		//其它指示灯关闭
-		CENTREOFF;
-		
+		AUTOON;
 		MANOFF;
-		
-		TIMEBASEOFF;
-		LEDStatus.Test = 1;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 0;
-		break;
-	case 0x02:
-		//中心控制，SystemControl
-		CENTREON;//中心控制指示灯打开
-
-		//其它指示灯关闭
 		ringflag=0;
-		MANOFF;
-		TESTOFF;
-		TIMEBASEOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 1;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 0;
-		
-		break;
-	case 0x03:
-		//中心待命，SystemStandby
-		//暂时无信号指示灯显示
-
-		//其它指示灯关闭
-		ringflag=0;
-		CENTREOFF;
-		MANOFF;
-		TESTOFF;
-		TIMEBASEOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 0;
-		
-		break;
-	case 0x04:
-		//备份控制，BackupMode
-		//暂时无信号指示灯显示
-
-		//其它指示灯关闭
-		ringflag=0;
-		CENTREOFF;
-		MANOFF;
-		TESTOFF;
-		TIMEBASEOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 0;
-		
-		break;
-	case 0x05:
-		//手动控制，Manual
-		MANON;//手动控制指示灯打开
-		ringflag=1;
-
-		//其它指示灯关闭
-		CENTREOFF;
-		TESTOFF;
-		TIMEBASEOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 1;
-		LEDStatus.Timebase = 0;
-		
-		break;
-	case 0x06:
-		//时基控制，Timebase
-		TIMEBASEON;//时基控制指示灯打开
-
-		//其它指示灯关闭
-		ringflag=0;
-		CENTREOFF;
-		MANOFF;
-		TESTOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 1;
-		
-		break;
-	case 0x07:
-		//互联，Interconnect
-		//暂时无信号指示灯显示
-
-		//其它指示灯关闭
-		ringflag=0;
-		TESTOFF;//无线遥控指示灯打开
-		CENTREOFF;
-		MANOFF;
-		TIMEBASEOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 0;
-		
-		break;
-	case 0x08:
-		//互联备份，InterconnectBackup
-		//暂时无信号指示灯显示
-
-		//其它指示灯关闭
-		ringflag=0;
-		TESTOFF;//无线遥控指示灯打开
-		CENTREOFF;
-		MANOFF;
-		TIMEBASEOFF;
-		
-		LEDStatus.Test = 0;
-		LEDStatus.Center = 0;
-		LEDStatus.Manual = 0;
-		LEDStatus.Timebase = 0;
-		
-		break;
-
-	default:
-		memset(Receive_Buf,0x00,10);
-		break;
 	}
-}
-
-//闪灯状态,命令0x145(325)
-void FLSS(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
-	switch (Signal){
-	case 0x01:
-		//其他原因闪灯
-		//暂时无信号指示灯显示
-
-		//关闭所有闪灯
-		AUTOFLSSOFF;
-		MANFLSSOFF;
-		ERRFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x02:
-		//非闪灯状态
-		//关闭所有闪灯
-
-		AUTOFLSSOFF;
-		MANFLSSOFF;
-		ERRFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x03:
-		//自动闪灯
-		AUTOFLSSON;//自动闪指示灯打开
-
-		//其它指示灯关闭
-		MANFLSSOFF;
-		ERRFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 1;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x04:
-		//本地手控闪灯
-		MANFLSSON;//手控闪指示灯打开
-
-		//其它指示灯关闭
-		AUTOFLSSOFF;
-		ERRFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 1;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x05:
-		//故障监视闪灯
-//    ERRFLSSON;//故障闪指示灯打开
-
-		//其它指示灯关闭
-		ERRFLSSOFF;//故障闪指示灯打开
-		AUTOFLSSOFF;
-		MANFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x06:
-		//MFU闪灯
-		ERRFLSSON;//故障闪指示灯打开
-
-//其它指示灯关闭
-		MANFLSSOFF;
-		AUTOFLSSOFF;
-//	  ERRFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 1;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x07:
-		//启动闪灯
-		//暂时无信号指示灯显示
-
-//其它指示灯关闭
-		MANFLSSOFF;
-		AUTOFLSSOFF;
-		ERRFLSSOFF;
-		ANTCPFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 0;
-		
-		break;
-	case 0x08:
-		//抢先闪灯
-		ANTCPFLSSON;//抢先闪指示灯打开
-
-		//其它指示灯关闭
-		AUTOFLSSOFF;
-		MANFLSSOFF;
-		ERRFLSSOFF;
-		
-		LEDStatus.A_Flash = 0;
-		LEDStatus.M_Flash = 0;
-		LEDStatus.F_Flash = 0;
-		LEDStatus.H_Flash = 1;
-		
-		break;
-
-	default:
-		memset(Receive_Buf,0x00,10);
-		break;
-	}
-}
-
-//信号机遥控状态0x146(326)
-void REMT(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
-
-	if (Signal == 0xAA){//信号机遥控工作为激活状态
-		//REMOTEON;       //遥控指示灯打开
-	}
-	else if (Signal == 0x55){//信号机遥控工作为关闭状态
-		//REMOTEOFF;       //遥控指示灯关闭
+	else if(Signal==0x55)//其它状态
+	{
+		AUTOOFF;
+		if(SIGNAL2)
+		{
+			ringflag=1;
+			MANON;
+		}
 	}
 	else
 		memset(Receive_Buf,0x00,10);
 }
+
+////信号机遥控状态0x146(326)
+//void REMT(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
+
+//	if (Signal == 0xAA){//信号机遥控工作为激活状态
+//		//REMOTEON;       //遥控指示灯打开
+//	}
+//	else if (Signal == 0x55){//信号机遥控工作为关闭状态
+//		//REMOTEOFF;       //遥控指示灯关闭
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
+
 //信号机数字键指示状态0x147(327)
 void KNMS(void)
 {
 	uint8_t Signal = 0x00;
 	Signal = Receive_Buf[3];
+	
+	if( (Signal>8) && (Signal<17) )
+	{
+		LEDFNON;
+		LEDStatus.Fn=1;
+		Signal-=8;
+	}
+	else
+	{
+		LEDFNOFF;
+		LEDStatus.Fn=0;
+	}
 
-	if ((Signal&0x01)==0x01)
+	if (Signal==0x01)
 	{
 		LEDONEON;
 		LEDStatus.One = 1;
@@ -454,7 +209,7 @@ void KNMS(void)
 		LEDStatus.One = 0;
 	}
 
-	if ((Signal&0x02)==0x02)
+	if (Signal==0x02)
 	{
 		
 		LEDTWOON;
@@ -467,7 +222,7 @@ void KNMS(void)
 		LEDStatus.Two = 0;
 	}
 
-	if ((Signal&0x04)==0x04)
+	if (Signal==0x03)
 	{
 		LEDTHREEON;
 		LEDStatus.Three = 1;
@@ -477,7 +232,7 @@ void KNMS(void)
 		LEDStatus.Three = 0;
 	}
 
-	if ((Signal&0x08)==0x08)
+	if (Signal==0x04)
 	{
 		LEDFOURON;
 		LEDStatus.Four = 1;
@@ -488,7 +243,7 @@ void KNMS(void)
 		LEDStatus.Four = 0;
 	}
 
-	if ((Signal&0x10)==0x10)
+	if (Signal==0x05)
 	{
 		LEDFIVEON;
 		LEDStatus.Five = 1;
@@ -499,7 +254,7 @@ void KNMS(void)
 		LEDStatus.Five = 0;
 	}
 
-	if ((Signal&0x20)==0x20)
+	if (Signal==0x06)
 	{
 		LEDSIXON;
 		LEDStatus.Six = 1;
@@ -509,7 +264,7 @@ void KNMS(void)
 		LEDSIXOFF;
 		LEDStatus.Six = 0;
 	}
-	if ((Signal&0x40)==0x40)
+	if (Signal==0x07)
 	{
 		LEDSEVENON;
 		LEDStatus.Seven = 1;
@@ -520,7 +275,7 @@ void KNMS(void)
 		LEDStatus.Seven = 0;
 	}
 
-	if ((Signal&0x80)==0x80)
+	if (Signal==0x08)
 	{
 		LEDEIGHTON;
 		LEDStatus.Eight = 1;
@@ -530,6 +285,7 @@ void KNMS(void)
 		LEDEIGHTOFF;
 		LEDStatus.Eight = 0;
 	}
+	
 	GetLedStatus();
 
 	memset(Receive_Buf,0x00,10);
@@ -576,128 +332,128 @@ void KARS(void)
 	else
 		memset(Receive_Buf,0x00,10);
 }
-//信号机A键指示状态0x14A(330)
-void KLAS(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
+////信号机A键指示状态0x14A(330)
+//void KLAS(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
 
-	if (Signal == 0xAA)
-	{
-		LEDKEYAON;
-		LEDStatus.Key_A = 1;
-		GetLedStatus();
-	}
-	else if (Signal == 0x55)
-	{
-		LEDKEYAOFF;
-		LEDStatus.Key_A = 0;
-		GetLedStatus();
-	}
-	else
-		memset(Receive_Buf,0x00,10);
-}
-//信号机B键指示状态0x14B(331)
-void KLBS(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
+//	if (Signal == 0xAA)
+//	{
+//		LEDKEYAON;
+//		LEDStatus.Key_A = 1;
+//		GetLedStatus();
+//	}
+//	else if (Signal == 0x55)
+//	{
+//		LEDKEYAOFF;
+//		LEDStatus.Key_A = 0;
+//		GetLedStatus();
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
+////信号机B键指示状态0x14B(331)
+//void KLBS(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
 
-	if (Signal == 0xAA)
-	{
-		LEDKEYBON;
-		LEDStatus.Key_B = 1;
-		GetLedStatus();
-	}
-	else if (Signal == 0x55)
-	{
-		LEDKEYBOFF;
-		LEDStatus.Key_B = 0;
-		GetLedStatus();
-	}
-	else
-		memset(Receive_Buf,0x00,10);
-}
-//信号机C键指示状态0x14C(332)
-void KLCS(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
+//	if (Signal == 0xAA)
+//	{
+//		LEDKEYBON;
+//		LEDStatus.Key_B = 1;
+//		GetLedStatus();
+//	}
+//	else if (Signal == 0x55)
+//	{
+//		LEDKEYBOFF;
+//		LEDStatus.Key_B = 0;
+//		GetLedStatus();
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
+////信号机C键指示状态0x14C(332)
+//void KLCS(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
 
-	if (Signal == 0xAA)
-	{
-		LEDKEYCON;
-		LEDStatus.Key_C = 1;
-		GetLedStatus();
-	}
-	else if (Signal == 0x55)
-	{
-		LEDKEYCOFF;
-		LEDStatus.Key_C = 0;
-		GetLedStatus();
-	}
-	else
-		memset(Receive_Buf,0x00,10);
-}
-//信号机D键指示状态0x14D(333)
-void KLDS(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
+//	if (Signal == 0xAA)
+//	{
+//		LEDKEYCON;
+//		LEDStatus.Key_C = 1;
+//		GetLedStatus();
+//	}
+//	else if (Signal == 0x55)
+//	{
+//		LEDKEYCOFF;
+//		LEDStatus.Key_C = 0;
+//		GetLedStatus();
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
+////信号机D键指示状态0x14D(333)
+//void KLDS(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
 
-	if (Signal == 0xAA)
-	{
-		LEDKEYDON;
-		LEDStatus.Key_D = 1;
-		GetLedStatus();
-	}
-	else if (Signal == 0x55)
-	{
-		LEDKEYDOFF;
-		LEDStatus.Key_D = 1;
-		GetLedStatus();
-	}
-	else
-		memset(Receive_Buf,0x00,10);
-}
-//信号机E键指示状态0x14E(334)
-void KLES(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
+//	if (Signal == 0xAA)
+//	{
+//		LEDKEYDON;
+//		LEDStatus.Key_D = 1;
+//		GetLedStatus();
+//	}
+//	else if (Signal == 0x55)
+//	{
+//		LEDKEYDOFF;
+//		LEDStatus.Key_D = 1;
+//		GetLedStatus();
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
+////信号机E键指示状态0x14E(334)
+//void KLES(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
 
-	if (Signal == 0xAA)
-	{
-		LEDKEYEON;
-		LEDStatus.Key_E = 1;
-		GetLedStatus();
-	}
-	else if (Signal == 0x55)
-	{
-		LEDKEYEOFF;
-		LEDStatus.Key_E = 0;
-		GetLedStatus();
-	}
-	else
-		memset(Receive_Buf,0x00,10);
-}
+//	if (Signal == 0xAA)
+//	{
+//		LEDKEYEON;
+//		LEDStatus.Key_E = 1;
+//		GetLedStatus();
+//	}
+//	else if (Signal == 0x55)
+//	{
+//		LEDKEYEOFF;
+//		LEDStatus.Key_E = 0;
+//		GetLedStatus();
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
 //信号机灯测试键指示状态0x14F(335)
-void KLSS(void){
-	uint8_t Signal = 0x00;
-	Signal = Receive_Buf[3];
+//void KLSS(void){
+//	uint8_t Signal = 0x00;
+//	Signal = Receive_Buf[3];
 
-	if (Signal == 0xAA)
-	{
-		LEDTESTON;
-		LEDStatus.Test = 1;
-		TestFlag=1;
-		GetLedStatus();
-	}
-	else if (Signal == 0x55)
-	{
-		LEDTESTOFF;
-		LEDStatus.Test = 0;
-		TestFlag=0;
-		GetLedStatus();
-	}
-	else
-		memset(Receive_Buf,0x00,10);
-}
+//	if (Signal == 0xAA)
+//	{
+//		LEDTESTON;
+//		LEDStatus.Test = 1;
+//		TestFlag=1;
+//		GetLedStatus();
+//	}
+//	else if (Signal == 0x55)
+//	{
+//		LEDTESTOFF;
+//		LEDStatus.Test = 0;
+//		TestFlag=0;
+//		GetLedStatus();
+//	}
+//	else
+//		memset(Receive_Buf,0x00,10);
+//}
 
 //键盘指示灯全控,命令0x150(336)
 void Test(void)
@@ -722,7 +478,6 @@ void LEDALL(uint8_t Mark)
 	//指示灯全部打开
 	if (Mark)
 	{
-		LEDSTEPON;
 		LEDONEON;
 		LEDTWOON;
 		LEDTHREEON;
@@ -731,26 +486,18 @@ void LEDALL(uint8_t Mark)
 		LEDSIXON;
 		LEDSEVENON;
 		LEDEIGHTON;
-		LEDKEYAON;
-		LEDKEYBON;
-		LEDKEYCON;
-		LEDKEYDON;
-		LEDKEYEON;
 		LEDALLREDON;
-		LEDTESTON;
-
+		LEDYFLASHON;
+		LEDFNON;
 
 		ERRLEDON;
-		TUNONLEDON;
 		KEYLOCKON;
+		AUTOON;
 		CENTREON;
+		
 		MANON;
-		TESTON;
-		TIMEBASEON;
-		AUTOFLSSON;
-		MANFLSSON;
-		ERRFLSSON;
-		ANTCPFLSSON;
+		TUNONLEDON;
+		LEDSTEPON;
 
 		//ringflag=1;
 		//SeriousErrFlag=1;
@@ -760,7 +507,7 @@ void LEDALL(uint8_t Mark)
 	}
 	else
 	{
-		LEDSTEPOFF;
+		
 		LEDONEOFF;
 		LEDTWOOFF;
 		LEDTHREEOFF;
@@ -769,25 +516,18 @@ void LEDALL(uint8_t Mark)
 		LEDSIXOFF;
 		LEDSEVENOFF;
 		LEDEIGHTOFF;
-		LEDKEYAOFF;
-		LEDKEYBOFF;
-		LEDKEYCOFF;
-		LEDKEYDOFF;
-		LEDKEYEOFF;
 		LEDALLREDOFF;
-		LEDTESTOFF;
+		LEDYFLASHOFF;
+		LEDFNOFF;
 		
 		ERRLEDOFF;
-		TUNONLEDOFF;
 		KEYLOCKOFF;
 		CENTREOFF;
+		AUTOOFF;
+		
 		MANOFF;
-		TESTOFF;
-		TIMEBASEOFF;
-		AUTOFLSSOFF;
-		MANFLSSOFF;
-		ERRFLSSOFF;
-		ANTCPFLSSOFF;
+		TUNONLEDOFF;
+		LEDSTEPOFF;
 
 		ringflag=0;
 		SeriousErrFlag=0;
@@ -815,8 +555,6 @@ void GetSwitchMode(void)
 	SwitchMode[0] = SIGNAL1;//外灯开关，1为打开，0为关闭
 	SwitchMode[1] = SIGNAL2;//手控开关
 	SwitchMode[2] = SIGNAL3;//闪灯开关
-	SwitchMode[3] = SIGNAL4;//遥控开关
-
 }
 
 //MAU控制信号机开关灯命令
@@ -874,26 +612,26 @@ void MFSC(void)
 	Send_CAN_DataFrame_Single(TxBuff,1);
 }
 
-//MAU遥控功能使能命令
-void MRTC(void)
-{
-	if (SIGNAL4)
-	{
-		TxBuff[0] = 0xAA;	//遥控功能使能
-	}
-	else
-		TxBuff[0] = 0x55;//
+////MAU遥控功能使能命令
+//void MRTC(void)
+//{
+//	if (SIGNAL4)
+//	{
+//		TxBuff[0] = 0xAA;	//遥控功能使能
+//	}
+//	else
+//		TxBuff[0] = 0x55;//
 
-	MAUFunFlag=24;
-//	Send_CAN_DataFrame_MAU(TxBuff);
-	Send_CAN_DataFrame_Single(TxBuff,1);
-}
+//	MAUFunFlag=24;
+////	Send_CAN_DataFrame_MAU(TxBuff);
+//	Send_CAN_DataFrame_Single(TxBuff,1);
+//}
 
 //MAU软硬件版本信息
 void MAVS(void)
 {
 	TxBuff[0] = (Versions & 0xff);	//印制板版本
-	TxBuff[0] = ((Versions>>8) & 0xff);	//固件版本
+	TxBuff[1] = ((Versions>>8) & 0xff);	//固件版本
 	MAUFunFlag=26;
 //	Send_CAN_DataFrame_MAU(TxBuff);
 	Send_CAN_DataFrame_Single(TxBuff,2);
@@ -1078,122 +816,122 @@ void ring(void)
 *                                //-------------------------------------------------------------
 *                                // S15|  0  |  1   |   1  |  1   |  0   |   1  |   1  |   1  |
 *                                //-------------------------------------------------------------*/
-void ReadKeyboard(void){
-	KEYx=0;
+//void ReadKeyboard(void){
+//	KEYx=0;
 
-	keylin[0] = GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15);//ROW1数据采集，默认置高输入
-	keylin[1] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_6);
-	keylin[2] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_7);
-	keylin[3] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_8);
-	keylin[4] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_9);//COL1数据采集,默认拉低输出
-	keylin[5] = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_8);
-	keylin[6] = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_9);
-	keylin[7] = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10);
+//	keylin[0] = GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15);//ROW1数据采集，默认置高输入
+//	keylin[1] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_6);
+//	keylin[2] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_7);
+//	keylin[3] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_8);
+//	keylin[4] = GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_9);//COL1数据采集,默认拉低输出
+//	keylin[5] = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_8);
+//	keylin[6] = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_9);
+//	keylin[7] = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10);
 
 
-	KEYx  = keylin[0];
-	KEYx |= keylin[1]<<1;
-	KEYx |= keylin[2]<<2;
-	KEYx |= keylin[3]<<3;
-	KEYx |= keylin[4]<<4;
-	KEYx |= keylin[5]<<5;
-	KEYx |= keylin[6]<<6;
-	KEYx |= keylin[7]<<7;
-}
+//	KEYx  = keylin[0];
+//	KEYx |= keylin[1]<<1;
+//	KEYx |= keylin[2]<<2;
+//	KEYx |= keylin[3]<<3;
+//	KEYx |= keylin[4]<<4;
+//	KEYx |= keylin[5]<<5;
+//	KEYx |= keylin[6]<<6;
+//	KEYx |= keylin[7]<<7;
+//}
 
-uint8_t Read_KeyValue(void){
-	uint8_t KeyValue=0;
-	
-	ReadKeyboard();
+//uint8_t Read_KeyValue(void){
+//	uint8_t KeyValue=0;
+//	
+//	ReadKeyboard();
 
-	if ((KEYx & 0xff)!= 0x0f)
-	{
-		GPIO_SetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10);
-		GPIO_ResetBits(GPIOC,GPIO_Pin_9);
-		ReadKeyboard();
-		switch (KEYx & 0xff)
-		{
-			case 0xEE:
-				KeyValue=16;
-				break;
-			case 0xED:
-				KeyValue=15;
-				break;
-			case 0xEB:
-				KeyValue=14;
-				break;
-			case 0xE7:
-				KeyValue=13;
-				break;
-		}
-		GPIO_SetBits(GPIOA,GPIO_Pin_9|GPIO_Pin_10);
-		GPIO_SetBits(GPIOC,GPIO_Pin_9);
-		GPIO_ResetBits(GPIOA,GPIO_Pin_8);
-		ReadKeyboard();
-		switch (KEYx & 0xff){
-		case 0xDE:
-			KeyValue=12;
-			break;
-		case 0xDD:
-			KeyValue=11;
-			break;
-		case 0xDB:
-			KeyValue=10;
-			break;
-		case 0xD7:
-			KeyValue=9;
-			break;
-		}
-		GPIO_SetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_10);
-		GPIO_SetBits(GPIOC,GPIO_Pin_9);
-		GPIO_ResetBits(GPIOA,GPIO_Pin_9);
-		ReadKeyboard();
-		switch (KEYx & 0xff){
-		case 0xBE:
-			KeyValue=8;
-			break;
-		case 0xBD:
-			KeyValue=7;
-			break;
-		case 0xBB:
-			KeyValue=6;
-			break;
-		case 0xB7:
-			KeyValue=5;
-			break;
-		}
-		GPIO_SetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9);
-		GPIO_SetBits(GPIOC,GPIO_Pin_9);
-		GPIO_ResetBits(GPIOA,GPIO_Pin_10);
-		ReadKeyboard();
-		switch (KEYx & 0xff)
-		{
-			case 0x7E:
-				KeyValue=4;
-				break;
-			case 0x7D:
-				KeyValue=3;
-				break;
-			case 0x7B:
-				KeyValue=2;
-				break;
-			case 0x77:
-				KeyValue=1;
-				break;
-//		    default:
-//					KeyValue=16;
-//		      break;
-		}
+//	if ((KEYx & 0xff)!= 0x0f)
+//	{
+//		GPIO_SetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10);
+//		GPIO_ResetBits(GPIOC,GPIO_Pin_9);
+//		ReadKeyboard();
+//		switch (KEYx & 0xff)
+//		{
+//			case 0xEE:
+//				KeyValue=16;
+//				break;
+//			case 0xED:
+//				KeyValue=15;
+//				break;
+//			case 0xEB:
+//				KeyValue=14;
+//				break;
+//			case 0xE7:
+//				KeyValue=13;
+//				break;
+//		}
+//		GPIO_SetBits(GPIOA,GPIO_Pin_9|GPIO_Pin_10);
+//		GPIO_SetBits(GPIOC,GPIO_Pin_9);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_8);
+//		ReadKeyboard();
+//		switch (KEYx & 0xff){
+//		case 0xDE:
+//			KeyValue=12;
+//			break;
+//		case 0xDD:
+//			KeyValue=11;
+//			break;
+//		case 0xDB:
+//			KeyValue=10;
+//			break;
+//		case 0xD7:
+//			KeyValue=9;
+//			break;
+//		}
+//		GPIO_SetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_10);
+//		GPIO_SetBits(GPIOC,GPIO_Pin_9);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_9);
+//		ReadKeyboard();
+//		switch (KEYx & 0xff){
+//		case 0xBE:
+//			KeyValue=8;
+//			break;
+//		case 0xBD:
+//			KeyValue=7;
+//			break;
+//		case 0xBB:
+//			KeyValue=6;
+//			break;
+//		case 0xB7:
+//			KeyValue=5;
+//			break;
+//		}
+//		GPIO_SetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9);
+//		GPIO_SetBits(GPIOC,GPIO_Pin_9);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_10);
+//		ReadKeyboard();
+//		switch (KEYx & 0xff)
+//		{
+//			case 0x7E:
+//				KeyValue=4;
+//				break;
+//			case 0x7D:
+//				KeyValue=3;
+//				break;
+//			case 0x7B:
+//				KeyValue=2;
+//				break;
+//			case 0x77:
+//				KeyValue=1;
+//				break;
+////		    default:
+////					KeyValue=16;
+////		      break;
+//		}
 
-//			return KeyValue;
-		GPIO_SetBits(GPIOB,GPIO_Pin_15);
-		GPIO_SetBits(GPIOC,GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8);//ROW1数据采集，默认置高输入
+////			return KeyValue;
+//		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+//		GPIO_SetBits(GPIOC,GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8);//ROW1数据采集，默认置高输入
 
-		GPIO_ResetBits(GPIOC,GPIO_Pin_9);
-		GPIO_ResetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10);
+//		GPIO_ResetBits(GPIOC,GPIO_Pin_9);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10);
 
-//			return KeyValue;
-	}
-	return KeyValue;
-}
+////			return KeyValue;
+//	}
+//	return KeyValue;
+//}
 

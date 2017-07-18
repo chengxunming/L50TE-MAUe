@@ -13,7 +13,7 @@ uint8_t CHn,MLMCqudou,MLMCswitchflag,switchflag,Switchqudou;
 uint8_t PWASSWORD_N,Freequdou,passwordvalue,Keyqudou,Keyboardvalue,KeyValue,Keystate,KeyPush=0;;
 uint8_t x,y,oldstatus;
 uint8_t RUNledstatus,Offlinecount=0,keybeep=0;
-_Bool Led_Status[16] = {0};
+_Bool Led_Status[11] = {0};
 _Bool forcetest=0;
 extern LED LEDStatus;
 
@@ -71,66 +71,66 @@ void LEDStatusFresh(void)
 {
 	if(Led_Status[0])
 	{
-		LEDSTEPON;
+		LEDFNON;
 	}
 	else
-		LEDSTEPOFF;
+		LEDFNOFF;
 	
 	if(Led_Status[1])
 	{
-		LEDONEON;
+		LEDYFLASHON;
 	}
 	else
-		LEDONEOFF;
+		LEDYFLASHOFF;
 	
 	if(Led_Status[2])
-	{
-		LEDTWOON;
-	}
-	else
-		LEDTWOOFF;
-	
-	if(Led_Status[3])
-	{
-		LEDTHREEON;
-	}
-	else
-		LEDTHREEOFF;
-	
-	if(Led_Status[4])
 	{
 		LEDALLREDON;
 	}
 	else
 		LEDALLREDOFF;
 	
+	if(Led_Status[3])
+	{
+		LEDONEON;
+	}
+	else
+		LEDONEOFF;
+	
+	if(Led_Status[4])
+	{
+		LEDTWOON;
+	}
+	else
+		LEDTWOOFF;
+	
 	if(Led_Status[5])
+	{
+		LEDTHREEON;
+	}
+	else
+		LEDTHREEOFF;
+	
+	if(Led_Status[6])
 	{
 		LEDFOURON;
 	}
 	else
 		LEDFOUROFF;
 	
-	if(Led_Status[6])
+	if(Led_Status[7])
 	{
 		LEDFIVEON;
 	}
 	else
 		LEDFIVEOFF;
 	
-	if(Led_Status[7])
+	if(Led_Status[8])
 	{
 		LEDSIXON;
 	}
 	else
 		LEDSIXOFF;
-	
-	if(Led_Status[8])
-	{
-		LEDKEYAON;
-	}
-	else
-		LEDKEYAOFF;
 	
 	if(Led_Status[9])
 	{
@@ -145,78 +145,34 @@ void LEDStatusFresh(void)
 	}
 	else
 		LEDEIGHTOFF;
-	
-	if(Led_Status[11])
-	{
-		LEDTESTON;
-	}
-	else
-		LEDTESTOFF;
-	
-	if(Led_Status[12])
-	{
-		LEDKEYBON;
-	}
-	else
-		LEDKEYBOFF;
-	
-	if(Led_Status[13])
-	{
-		LEDKEYCON;
-	}
-	else
-		LEDKEYCOFF;
-	
-	if(Led_Status[14])
-	{
-		LEDKEYDON;
-	}
-	else
-		LEDKEYDOFF;
-	
-	if(Led_Status[15])
-	{
-		LEDKEYEON;
-	}
-	else
-		LEDKEYEOFF;	
 }
 
 void GetLedStatus(void)
 {
-	Led_Status[0] = LEDStatus.Step;
-	Led_Status[1] = LEDStatus.One;
-	Led_Status[2] = LEDStatus.Two;
-	Led_Status[3] = LEDStatus.Three;
-	Led_Status[4] = LEDStatus.Allred;
-	Led_Status[5] = LEDStatus.Four;
-	Led_Status[6] = LEDStatus.Five;
-	Led_Status[7] = LEDStatus.Six;
-	Led_Status[8] = LEDStatus.Key_A;
+	Led_Status[0] = LEDStatus.Fn;
+	Led_Status[1] = LEDStatus.Y_Flash;
+	Led_Status[2] = LEDStatus.Allred;
+	Led_Status[3] = LEDStatus.One;
+	Led_Status[4] = LEDStatus.Two;
+	Led_Status[5] = LEDStatus.Three;
+	Led_Status[6] = LEDStatus.Four;
+	Led_Status[7] = LEDStatus.Five;
+	Led_Status[8] = LEDStatus.Six;
 	Led_Status[9] = LEDStatus.Seven;
 	Led_Status[10] = LEDStatus.Eight;
-	Led_Status[11] = LEDStatus.Test;
-	Led_Status[12] = LEDStatus.Key_B;
-	Led_Status[13] = LEDStatus.Key_C;
-	Led_Status[14] = LEDStatus.Key_D;
-	Led_Status[15] = LEDStatus.Key_E;	
 }
 
 void StatusLedFresh(void)
 {
 	if(LEDStatus.Fault) ERRLEDON; else ERRLEDOFF;
-	if(LEDStatus.Open) TUNONLEDON; else TUNONLEDOFF;
-	if(LEDStatus.Lock) KEYLOCKON; else KEYLOCKOFF;
-	
-	if(LEDStatus.Test) TESTON; else TESTOFF;
+//	if(LEDStatus.Lock) KEYLOCKON; else KEYLOCKOFF;
 	if(LEDStatus.Center) CENTREON; else CENTREOFF;
-	if(LEDStatus.Manual) MANON; else MANOFF;
-	if(LEDStatus.Timebase) TIMEBASEON; else TIMEBASEOFF;
+	if(LEDStatus.Auto) AUTOON; else AUTOOFF;
 	
-	if(LEDStatus.A_Flash) AUTOFLSSON; else AUTOFLSSOFF;
-	if(LEDStatus.M_Flash) MANFLSSON; else MANFLSSOFF;
-	if(LEDStatus.F_Flash) ERRFLSSON; else ERRFLSSOFF;
-	if(LEDStatus.H_Flash) ANTCPFLSSON; else ANTCPFLSSOFF;
+
+	if(LEDStatus.Open) TUNONLEDON; else TUNONLEDOFF;
+	if(LEDStatus.Step) LEDSTEPON; else LEDSTEPOFF;
+	if(LEDStatus.Manual) MANON; else MANOFF;
 }
 
 void NormalFresh(void)
@@ -284,7 +240,7 @@ void TIM2_IRQHandler(void)
 				MLMC();
 				MMAC();
 				MFSC();
-				MRTC();
+//				MRTC();
 				MAVS();
 				ReadKeyboard();
 				X=Read_KeyValue();
@@ -427,13 +383,13 @@ void TIM4_IRQHandler(void){
 			{//判定密码介入状态
 				if (!passwordFlag)
 				{
-					//passwordFlag=1;
+					passwordFlag=1;
 					passwordFlag=0;   //20170608 测试用
 					TIMENumber=1;//计数清零
 					password=passwordvalue;
 					KEYLOCKOFF;
 					LEDStatus.Lock = 1;
-					MAUS();
+//					MAUS();
 				}
 			}
 			else
@@ -483,13 +439,13 @@ void TIM4_IRQHandler(void){
 				PWASSWORD_N=0;
 			}
 
-			if (passwordFlag)
+			if(passwordFlag)
 			{//判定锁屏
 				//判定按键按下
 				//扫描键盘
 				
 				ReadKeyboard();
-				if ((KEYx & 0xff)!=0x0f){//有按键按下
+				if ((KEYx & 0x7ff)!=0x7ff){//有按键按下
 					if (!Keystate){
 						keylockflss=1;
 						Keyboardvalue=Read_KeyValue();
@@ -550,13 +506,12 @@ void TIM4_IRQHandler(void){
 							TIMENumber=1;//开始计数
 							keylockflss=0;
 							KEYLOCKOFF;
-							MAUS();
+							//MAUS();
 							PWASSWORD_N=0;
 						}
 					}
 					else Freequdou=1;
 				}
-        KEYLOCKON;
 			}
 
 			else
@@ -568,7 +523,7 @@ void TIM4_IRQHandler(void){
 				//拨动开关扫描
 				sw[1]=SIGNAL2;
 				sw[2]=SIGNAL3;
-				sw[3]=SIGNAL4;
+//				sw[3]=SIGNAL4;
 				if (CHn<4)
 				{
 					if (sw[CHn] != SwitchMode[CHn])
@@ -596,7 +551,7 @@ void TIM4_IRQHandler(void){
 									MFSC();//MAU闪灯控制命令
 									break;
 								case 3:
-									MRTC();//MAU遥控功能使能命令
+//									MRTC();//MAU遥控功能使能命令
 									break;
 								default:
 									break;
@@ -703,7 +658,7 @@ void TIM4_IRQHandler(void){
 				passwordFlag=1;
 				TIMENumber=1;//计数清零
 				KEYLOCKON;
-				MAUS();
+//				MAUS();
 			}
 			else TIMENumber=1;
 		}
@@ -748,26 +703,26 @@ void RUNLED(void)
 		KEYLOCKON;
 	else
 		KEYLOCKOFF;
-	if(SeriousErrFlag)
-	{
-		ERRLEDON;
-	}
-	else	
-	{
-		if(WarningErrFlag)
-		{
-			if (RUNledstatus)
-			{
-				ERRLEDON;       //故障灯打开
-			}
-			else
-			{
-				ERRLEDOFF;       //故障灯关闭
-			}
-		}
-		else
-			ERRLEDOFF;
-		
-	}
+//	if(SeriousErrFlag)
+//	{
+//		ERRLEDON;
+//	}
+//	else	
+//	{
+//		if(WarningErrFlag)
+//		{
+//			if (RUNledstatus)
+//			{
+//				ERRLEDON;       //故障灯打开
+//			}
+//			else
+//			{
+//				ERRLEDOFF;       //故障灯关闭
+//			}
+//		}
+//		else
+//			ERRLEDOFF;
+//		
+//	}
 }
 
