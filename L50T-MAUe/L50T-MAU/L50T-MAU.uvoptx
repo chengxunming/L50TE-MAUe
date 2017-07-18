@@ -118,7 +118,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>割$</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -160,6 +159,38 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
+          <LineNumber>658</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134224282</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\USER\TIMIRQHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\L50T_MAU\../USER/TIMIRQHandler.c\658</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>68</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134218324</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\USER\function.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\L50T_MAU\../USER/function.c\68</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
           <LineNumber>43</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>134218208</Address>
@@ -174,11 +205,11 @@
           <Expression>\\L50T_MAU\../USER/function.c\43</Expression>
         </Bp>
         <Bp>
-          <Number>1</Number>
+          <Number>3</Number>
           <Type>0</Type>
           <LineNumber>510</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134223552</Address>
+          <Address>134223544</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -188,6 +219,22 @@
           <Filename>..\USER\TIMIRQHandler.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\L50T_MAU\../USER/TIMIRQHandler.c\510</Expression>
+        </Bp>
+        <Bp>
+          <Number>4</Number>
+          <Type>0</Type>
+          <LineNumber>386</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134223008</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\USER\TIMIRQHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\L50T_MAU\../USER/TIMIRQHandler.c\386</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -224,7 +271,7 @@
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>passwordFlag</ItemText>
+          <ItemText>passwordFlag,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
